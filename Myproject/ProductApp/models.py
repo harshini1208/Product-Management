@@ -4,14 +4,14 @@ from django.db import models
 class Product(models.Model):
     pcode=models.IntegerField(primary_key=True)
     pname=models.CharField(max_length=100)
-    price=models.DecimalField(max_digits=10,decimal_places=4)
-    mfd=models.DateField()
-    exp=models.DateField()
-    prod_count=models.IntegerField()
+    price=models.CharField(max_length=100)
+    mfd=models.CharField(max_length=100)
+    exp=models.CharField(max_length=20)
+    prod_count=models.IntegerField(default=0)
 
 
     def __str__(self):
-        return self.name
+        return self.pname
 
 
 class ProductDiscount(models.Model):
@@ -20,6 +20,16 @@ class ProductDiscount(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return self.pname
 
 
+class Bestseller(models.Model):
+    pcode = models.IntegerField()
+    pname = models.CharField(max_length=100)
+    price = models.CharField(max_length=100)
+    mfd = models.CharField(max_length=100)
+    exp = models.CharField(max_length=20)
+    prod_count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.pname
