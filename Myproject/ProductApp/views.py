@@ -77,8 +77,13 @@ def bestseller_products(request):
     for product in serializer.data:
         product_count.append(product['prod_count'])
     max_count=max(product_count)
-    items=Bestseller.objects.get(id=1)
-    print(items,2)
+    try:
+        items=Bestseller.objects.get(pcode=1)
+        print(items,2)
+    except:
+        item=Bestseller(pcode=1,pname='indiangate',price='257',mfd='12/05/1997',exp='22/07/2023',prod_count=0)
+        item.save()
+        items = Bestseller.objects.get(pcode=1)
     new_item=Product.objects.get(prod_count=int(max_count))
     serializer2=Productserializer(new_item)
     print(new_item,1)
