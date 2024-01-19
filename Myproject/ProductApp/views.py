@@ -71,28 +71,22 @@ def product_discount(request):
 @api_view(['GET'])
 def bestseller_products(request):
     product_count=[]
-    details=[]
+    #details=[]
     prod_details=Product.objects.all()
     serializer=Productserializer(prod_details,many=True)
     for product in serializer.data:
         product_count.append(product['prod_count'])
     max_count=max(product_count)
-    try:
-        items=Bestseller.objects.all()
-        items=items[0]
-        print(items,2)
-    except:
-        item=Bestseller(pcode=1,pname='indiangate',price='257',mfd='12/05/1997',exp='22/07/2023',prod_count=0)
+    Bestseller.objects.all().delete()  #syntax to delete all the data from db
+    new_item = Product.objects.filter(prod_count=int(max_count))
+    serializer4=Productserializer(new_item,many=True)
+    #print(serializer4.data[0]['pcode'])
+    for items in serializer4.data:
+        item = Bestseller(pcode=items['pcode'], pname=items['pname'], price=items['price'], mfd=items['mfd'], exp=items['exp'], prod_count=items['prod_count'])
         item.save()
-        items = Bestseller.objects.all()
-    new_item=Product.objects.get(prod_count=int(max_count))
-    serializer2=Productserializer(new_item)
-    print(new_item,1)
-    serializer1 =Bestsellerserializer(items,serializer2.data)
-    if serializer1.is_valid():
-        serializer1.save()
-    for product in serializer.data:
-        if product['prod_count']==max_count:
-            details.append(product)
-    else:
-        return Response(details)
+    return Response(serializer4.data)
+    # for product in serializer.data:
+    #     if product['prod_count']==max_count:
+    #         details.append(product)
+    # else:
+    #     return Response(serializer4.data)
