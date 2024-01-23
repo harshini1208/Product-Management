@@ -12,12 +12,20 @@ def Product_data(request):
     if request.method=='GET':
         prod=Product.objects.all()
         serializer=Productserializer(prod,many=True)
-        return JsonResponse(serializer.data,status=status.HTTP_202_ACCEPTED,safe=False)
+        return Response(serializer.data,status=status.HTTP_202_ACCEPTED,safe=False)
     elif request.method=='POST':
         serializer=Productserializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+        org_price=serializer.data['original_price']
+        new_price=serializer.data['new_price']
+        dis_price=int(org_price)-int(new_price)
+        dis_per=(dis_price/int(org_price))*100
+        dis_per=str(dis_per)+'%'
+        Product.objects.filter(pcode=serializer.data['pcode']).update(discount_per=dis_per)
+        serializer1=Product.objects.get(pcode=serializer.data['pcode'])
+        serializer1=Productserializer(serializer1)
+    return Response(serializer1.data,status=status.HTTP_201_CREATED)
     #return Response(status=status.HTTP_102_PROCESSING)
 
 
