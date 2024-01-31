@@ -11,6 +11,7 @@ class DiscountAdmin(admin.ModelAdmin):
 admin.site.register(ProductDiscount,DiscountAdmin)
 
 class BestsellerAdmin(admin.ModelAdmin):
-    list_display = ['pcode','pname','price','mfd','exp','prod_count']
+    list_display = ['pcode','pname','original_price','new_price','discount_per','mfd','exp','prod_count']
 admin.site.register(Bestseller,BestsellerAdmin)
+
 

@@ -12,7 +12,7 @@ def Product_data(request):
     if request.method=='GET':
         prod=Product.objects.all()
         serializer=Productserializer(prod,many=True)
-        return Response(serializer.data,status=status.HTTP_202_ACCEPTED,safe=False)
+        return Response(serializer.data,status=status.HTTP_202_ACCEPTED)
     elif request.method=='POST':
         serializer=Productserializer(data=request.data)
         if serializer.is_valid():
@@ -45,7 +45,7 @@ def Product_details(request,id):
         serializer=Productserializer(prod,data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
     elif request.method=='DELETE':
         prod.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -90,7 +90,7 @@ def bestseller_products(request):
     serializer4=Productserializer(new_item,many=True)
     #print(serializer4.data[0]['pcode'])
     for items in serializer4.data:
-        item = Bestseller(pcode=items['pcode'], pname=items['pname'], price=items['price'], mfd=items['mfd'], exp=items['exp'], prod_count=items['prod_count'])
+        item = Bestseller(pcode=items['pcode'], pname=items['pname'], original_price=items['original_price'],new_price=items['new_price'], mfd=items['mfd'], discount_per=items['discount_per'], exp=items['exp'], prod_count=items['prod_count'])
         item.save()
     return Response(serializer4.data)
     # for product in serializer.data:
@@ -98,3 +98,4 @@ def bestseller_products(request):
     #         details.append(product)
     # else:
     #     return Response(serializer4.data)
+
